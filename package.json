@@ -1,0 +1,16 @@
+{
+  "name": "dubzoowebcrawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "node-schedule": "^1.3.2",
+    "puppeteer": "^1.12.2"
+  }
+}
