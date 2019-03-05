@@ -1,23 +1,29 @@
 // Instagram scraper tool
 const puppeteer = require('puppeteer')
 const fetch = require('node-fetch')
+const parser = require('fast-xml-parser');
 
 var getData = async function(requests) {
-  var responses = [];
-
-  var responses = requests.map(async function(request) {
-    console.log(request)
-    let entry
-    let url = request._url
-    let headers = request._headers
-    await fetch(url, { headers: { headers } })
-      .then(response => console.log(response))
-      .then(response => entry = response)
-      .catch(err => console.error(err))
-    return entry
-  });
-
-  return responses;
+  //   var responses = requests.map(async function(request) {
+  //   if (request._response._status !== 200) return
+  //   let url = request._url
+  //   let headers = request._headers
+  //   let response = await fetch(url, { headers: headers })
+  //     .then(response => console.log(response))
+  //     .catch(err => console.log(err))
+  //   return response
+  // })
+  // console.log("REQUESTS: ", requests)
+  // console.log("RESPONSES: ", responses)
+  // return responses
+  console.clear()
+  console.log('---------------------------------------------')
+  const responsePromises = requests
+    .map(request => fetch(request._url, { headers: request._headers }))
+  const responses = await Promise.all(responsePromises)
+  console.log(responses[2].(Body internals))
+  //   .then(respJson => console.log(JSON.stringify(respJson)))
+  // return responses;
 }
 
 module.exports = {
@@ -27,7 +33,7 @@ module.exports = {
       // start puppeteer headless browser
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
-      await page.setViewport({width: 800, height: 600, deviceScaleFactor: 2});
+      await page.setViewport({width: 800, height: 600, deviceScaleFactor: 2})
 
       // tell browser to store requests
       page.on('request', async (request) => {
