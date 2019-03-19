@@ -1,6 +1,6 @@
 // POSSIBLE FIX: RUN ALL REQUESTS FROM INSIDE PUPPETEER BROWSER
 
-// Instagram scraper tool
+// Soundcloud scraper tool
 const fetch = require('node-fetch')
 const puppeteer = require('puppeteer')
 const keys = require('../config/keys.js')
@@ -8,8 +8,12 @@ const keys = require('../config/keys.js')
 module.exports = {
   function: async function (handle) {
     // GET soundcloud user page HTML
-    const response = await fetch('https://www.soundcloud.com/' + handle)
+    const response = await fetch('https://www.soundcloud.com/' + encodeURI(handle))
     let html = String(await response.text())
+
+    let nameStartIndex = html.indexOf('permalink') + 12
+    let nameEndIndex = html.indexOf('permalink_url') - 3
+    let name = html.substring(nameStartIndex, nameEndIndex)
 
     let tracksStartIndex = html.indexOf('track_count') + 13
     let tracksEndIndex = html.indexOf('uri') - 2
@@ -19,6 +23,8 @@ module.exports = {
     let followersEndIndex = html.indexOf('followings_count') - 2
     let followerCount = html.substring(followersStartIndex, followersEndIndex)
 
-    return("Track count: " + trackCount + " Follower count: " + followerCount)
+    let dataJSON = { username: name, track_count: trackCount, follower_count: followerCount, date_requested: Date.now() }
+
+    return dataJSON
   }
 }
