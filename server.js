@@ -139,11 +139,43 @@ updateData = (artists) => {
         if (username === newSpotifyEntry.username && Date.now() >= date + 3600*24) spotifyData = [...artist.spotifyData, newSpotifyEntry]
       } catch(error) { console.log(error) }
     }
-    this.sendData(await youtubeData, await soundcloudData, await instagramData, await spotifyData, artistID)
+
+    // TWITTER
+    //
+    if (artist.twitterHandle) {
+      let newTwitterEntry = await twitter.function(artist.twitterHandle)
+      let twitterData = [newTwitterEntry]
+      try {
+        let latestData = artist.twitterData[artist.twitterData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newTwitterEntry.username, Date.now(), date)
+        if (username === newTwitterEntry.username && Date.now() < date + 3600*24) newTwitterData = artist.twitterData
+        if (username === newTwitterEntry.username && Date.now() >= date + 3600*24) twitterData = [...artist.twitterData, newTwitterEntry]
+      } catch(error) { console.log(error) }
+    }
+
+    // FACEBOOK
+    //
+    if (artist.facebookHandle) {
+      let newFacebookEntry = await facebook.function(artist.facebookHandle)
+      let facebookData = [newFacebookEntry]
+      try {
+        let latestData = artist.facebookData[artist.facebookData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newFacebookEntry.username, Date.now(), date)
+        if (username === newFacebookEntry.username && Date.now() < date + 3600*24) newFacebookData = artist.facebookData
+        if (username === newFacebookEntry.username && Date.now() >= date + 3600*24) facebookData = [...artist.facebookData, newFacebookEntry]
+      } catch(error) { console.log(error) }
+    }
+
+    // call function to update database
+    this.sendData(await youtubeData, await soundcloudData, await instagramData, await spotifyData, await twitterData, await facebookData, artistID)
   })
 }
 
-sendData = (youtubeData, soundcloudData, instagramData, spotifyData, artistID) => {
+sendData = (youtubeData, soundcloudData, instagramData, spotifyData, twitterData, facebookData, artistID) => {
   // send new data to db
   try {
     fetch(keys.STRAPI_URI + '/artists/' + artistID, {
@@ -156,7 +188,9 @@ sendData = (youtubeData, soundcloudData, instagramData, spotifyData, artistID) =
         "youtubeData": youtubeData,
         "soundcloudData": soundcloudData,
         "instagramData": instagramData,
-        "spotifyData": spotifyData
+        "spotifyData": spotifyData,
+        "twitterData": twitterData,
+        "facebookData": facebookData
       })
     })
   } catch(error) { console.log(error) }
@@ -190,6 +224,12 @@ app.get('/spotify', async function (req, res) {
 app.get('/twitter', async function (req, res) {
   let handle = req.query.handle
   let report = await twitter.function(handle)
+  res.send(report)
+})
+
+app.get('/facebook', async function (req, res) {
+  let handle = req.query.handle
+  let report = await facebook.function(handle)
   res.send(report)
 })
 

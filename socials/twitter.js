@@ -13,8 +13,8 @@ module.exports = {
     const socialHTML = await socialResponse.text();
 
     // find index positions of tags surrounding data. NOTE: data order = tweets, following, followers, likes
-    let nameStartIndex = socialHTML.search('<title>') + 19;
-    let nameEndIndex = socialHTML.search('</title>') - 11;
+    let nameStartIndex = socialHTML.search('hreflang="fr" href="https://twitter.com/') + 40;
+    let nameEndIndex = socialHTML.search('lang=fr">') - 1;
     let tweetsStartIndex = socialHTML.search('<span class="u-hiddenVisually">Tweets, current page.</span>') + 115;
     let followingStartIndex = socialHTML.search('<span class="u-hiddenVisually">Following</span>') + 100;
     let followersStartIndex = socialHTML.search('<span class="u-hiddenVisually">Followers</span>') + 100;
