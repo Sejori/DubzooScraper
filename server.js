@@ -1,28 +1,23 @@
 // here are my things!
-var youtube = require("./socials/youtube.js")
-var soundcloud = require("./socials/soundcloud.js")
-var instagram = require("./socials/instagram.js")
-var spotify = require("./socials/spotify.js")
+const youtube = require("./socials/youtube.js")
+const soundcloud = require("./socials/soundcloud.js")
+const instagram = require("./socials/instagram.js")
+const spotify = require("./socials/spotify.js")
+const twitter = require("./socials/twitter.js")
+const facebook = require("./socials/facebook.js")
 const keys = require('./config/keys.js')
+var artists
+var jwt
 
 // here are other peoples things xxx
-var axios = require('axios')
-var express = require('express')
-var app = express()
-var schedule = require('node-schedule')
-var artists
+const axios = require('axios')
+const fetch = require('node-fetch')
+const express = require('express')
+const app = express()
+const schedule = require('node-schedule')
 
 //                          CRON SCHEDULING
 var j = schedule.scheduleJob('0 1 * * *', function(){
-  console.log('It was 1am. The database handles were fetched, and new data has been added! :)');
-
-});
-
-//                               ROUTES
-
-// respond with "hello world" when a GET request is made to the homepage
-app.get('/', async function (req, res) {
-  //res.send('Hello you cheeky monkey! <br/> <br/> This is the Dubzoo scraper. Try /youtube, /instagram, /spotify or /soundcloud followed by ?handle=[insert username here] :D')
 
   // login to strapi as ScraperUser for administrative permissions
   axios
@@ -32,7 +27,7 @@ app.get('/', async function (req, res) {
     })
     .then(response => {
       // Update React State Credentials
-      let jwt = response.data.jwt
+      jwt = response.data.jwt
 
       // Strapi call for all artist entries
       axios
@@ -47,7 +42,7 @@ app.get('/', async function (req, res) {
           artists = response.data
 
           // send each artist object to updateData function
-          this.updateData(jwt, artists)
+          this.updateData(artists)
         })
         .catch(error => {
           console.log(error)
@@ -58,23 +53,116 @@ app.get('/', async function (req, res) {
       alert('An error occurred.', error);
     })
 
+  console.log('It was 1am. The database handles were fetched, and new data has been added! :)');
+
+});
+
+//                               ROUTES
+
+// respond with "hello world" when a GET request is made to the homepage
+app.get('/', async function (req, res) {
+
+  res.send('Hello you cheeky monkey! <br/> <br/> This is the Dubzoo scraper. Try /youtube, /instagram, /spotify or /soundcloud followed by ?handle=[insert username here] :D')
+
 })
 
-updateData = (jwt, artists) => {
+updateData = (artists) => {
+
   // loop over each entry
+  artists.forEach(async function(artist) {
+    let artistID = artist.id
+    console.log(artistID)
+    let youtubeData
+    let soundcloudData
+    let instagramData
+    let spotifyData
 
+    // YOUTUBE
+    //
     // if statements for each social account. If handle exists call associated API and send handle.
+    if (artist.youtubeHandle) {
+      // get new data for social
+      let newYoutubeEntry = await youtube.function(artist.youtubeHandle)
+      youtubeData = [newYoutubeEntry]
+      // if username matches and date is more than or equal to 12 hours ahead push current data to end of new data
+      try {
+        let latestData = artist.youtubeData[artist.youtubeData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newYoutubeEntry.username, Date.now(), date)
+        if (username === newYoutubeEntry.username && Date.now() < date + 3600*24) youtubeData = artist.youtubeData
+        if (username === newYoutubeEntry.username && Date.now() >= date + 3600*24) youtubeData = [...artist.youtubeData, newYoutubeEntry]
+      } catch(error) { console.log(error) }
+    }
 
-      // if username of response matches previous data username then push new data onto end of old data
+    // SOUNDCLOUD
+    //
+    if (artist.soundcloudHandle) {
+      let newSoundcloudEntry = await soundcloud.function(artist.soundcloudHandle)
+      let soundcloudData = [newSoundcloudEntry]
+      try {
+        let latestData = artist.soundcloudData[artist.soundcloudData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newSoundcloudEntry.username, Date.now(), date)
+        if (username === newSoundcloudEntry.username && Date.now() < date + 3600*24) soundcloudData = artist.soundcloudData
+        if (username === newSoundcloudEntry.username && Date.now() >= date + 3600*24) soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
+      } catch(error) { console.log(error) }
+    }
 
-      // else if username is different: replace old data with new data
+    // INSTAGRAM
+    //
+    if (artist.instagramHandle) {
+      let newInstagramEntry = await youtube.function(artist.instagramHandle)
+      let instagramData = [newInstagramEntry]
+      try {
+        let latestData = artist.instagramData[artist.instagramData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newInstagramEntry.username, Date.now(), date)
+        if (username === newInstagramEntry.username && Date.now() < date + 3600*24) instagramData = artist.instagramData
+        if (username === newInstagramEntry.username && Date.now() >= date + 3600*24) instagramData = [...artist.instagramData, newInstagramEntry]
+      } catch(error) { console.log(error) }
+    }
 
-// update artist entry with new data
-  console.log(jwt, artists)
+    // SPOTIFY
+    //
+    if (artist.spotifyHandle) {
+      let newSpotifyEntry = await spotify.function(artist.spotifyHandle)
+      let spotifyData = [newSpotifyEntry]
+      try {
+        let latestData = artist.spotifyData[artist.spotifyData.length-1]
+        let username = latestData.username
+        let date = latestData.date_requested
+        console.log(username, newSpotifyEntry.username, Date.now(), date)
+        if (username === newSpotifyEntry.username && Date.now() < date + 3600*24) newSpotifyData = artist.spotifyData
+        if (username === newSpotifyEntry.username && Date.now() >= date + 3600*24) spotifyData = [...artist.spotifyData, newSpotifyEntry]
+      } catch(error) { console.log(error) }
+    }
+    this.sendData(await youtubeData, await soundcloudData, await instagramData, await spotifyData, artistID)
+  })
 }
 
-// respond with instagram function result when GET request made to /instagram
-// this allows for manual testing
+sendData = (youtubeData, soundcloudData, instagramData, spotifyData, artistID) => {
+  // send new data to db
+  try {
+    fetch(keys.STRAPI_URI + '/artists/' + artistID, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + jwt
+      },
+      body: JSON.stringify({
+        "youtubeData": youtubeData,
+        "soundcloudData": soundcloudData,
+        "instagramData": instagramData,
+        "spotifyData": spotifyData
+      })
+    })
+  } catch(error) { console.log(error) }
+}
+
+// these are for fun & manual testing
 app.get('/instagram', async function (req, res) {
   let handle = req.query.handle
   let report = await instagram.function(encodeURI(handle))
@@ -99,4 +187,10 @@ app.get('/spotify', async function (req, res) {
   res.send(report)
 })
 
-app.listen(8000, () => console.log(`Example app listening on port 8000!`))
+app.get('/twitter', async function (req, res) {
+  let handle = req.query.handle
+  let report = await twitter.function(handle)
+  res.send(report)
+})
+
+app.listen(process.env.PORT || 8000 , () => console.log(`Example app listening on port 8000!`))
