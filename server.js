@@ -17,7 +17,7 @@ const app = express()
 const schedule = require('node-schedule')
 
 //                          CRON SCHEDULING
-var j = schedule.scheduleJob('0 1 * * *', function(){
+var j = schedule.scheduleJob('* * * * *', function(){
 
   // login to strapi as ScraperUser for administrative permissions
   axios
@@ -176,6 +176,7 @@ updateData = (artists) => {
 }
 
 sendData = (youtubeData, soundcloudData, instagramData, spotifyData, twitterData, facebookData, artistID) => {
+
   // send new data to db
   try {
     fetch(keys.STRAPI_URI + '/artists/' + artistID, {
