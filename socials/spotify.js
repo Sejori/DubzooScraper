@@ -26,8 +26,10 @@ module.exports = {
       const authJSON = await authResponse.json()
 
       // TEST RESPONSE IS VALID
-      if (authResponse.status !== 200) throw authJSON
-
+      if (authResponse.status !== 200) {
+        throw authJSON
+        console.log('error in spotify auth api call')
+      }
       // if all good assign access token
       accessToken = authJSON.access_token
     } catch(e) {
@@ -45,8 +47,14 @@ module.exports = {
       })
       const searchJSON = await searchResponse.json()
 
+
       // TEST RESPONSE IS VALID
       if (searchResponse.status !== 200) throw searchJSON
+
+      if (!searchJSON.artists.items[0]) {
+        console.log('No spotify search match found.')
+        return 'Cannot find artist'
+      }
 
       // if all good assign values
       name = searchJSON.artists.items[0].name
@@ -74,7 +82,6 @@ module.exports = {
       console.log("Artist has " + albumJSON.albums.items.length + " albums.")
       albumJSON.albums.items.forEach(function(element) {
         if (element.total_tracks !== NaN) tracks += element.total_tracks
-        console.log(tracks)
       })
 
     } catch(e) {
