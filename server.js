@@ -43,7 +43,7 @@ getData = async(artistID) => {
           "Authorization": "Bearer " + jwt
         }
       })
-      let artists = await artistResponse.data
+      let artists = await [artistResponse.data]
       updateData(artists)
     } catch(error) { console.log(error) }
   } else {
@@ -92,13 +92,15 @@ updateData = async(artists) => {
           let latestData = artist.youtubeData[artist.youtubeData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newYoutubeEntry.username && Date.now() < date + 3600) {
+          if (username === newYoutubeEntry.username && Date.now() < date + 3600000) {
             artist.youtubeData.pop()
             youtubeData = [...artist.youtubeData, newYoutubeEntry]
           }
-          if (username === newYoutubeEntry.username && Date.now() >= date + 3600) youtubeData = [...artist.youtubeData, newYoutubeEntry]
+          if (username === newYoutubeEntry.username && Date.now() >= date + 3600000) youtubeData = [...artist.youtubeData, newYoutubeEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing YouTube Data: ' + artist.youtubeData)
+      console.log('New YouTube Data: ' + youtubeData)
     }
 
     // SOUNDCLOUD
@@ -112,33 +114,43 @@ updateData = async(artists) => {
           let latestData = artist.soundcloudData[artist.soundcloudData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          console.log(username, newSoundcloudEntry.username, Date.now(), date)
-          if (username === newSoundcloudEntry.username && Date.now() < date + 3600) soundcloudData = artist.soundcloudData
-          if (username === newSoundcloudEntry.username && Date.now() >= date + 3600) soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
+          if (username === newSoundcloudEntry.username && Date.now() < date + 3600000) {
+            artist.soundcloudData.pop()
+            soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
+          }
+          if (username === newSoundcloudEntry.username && Date.now() >= date + 3600000) soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing Soundcloud Data: ' + artist.soundcloudData)
+      console.log('New Soundcloud Data: ' + soundcloudData)
     }
 
     // INSTAGRAM
     //
     if (artist.instagramHandle) {
-      let newInstagramEntry = await youtube.function(artist.instagramHandle)
+      console.log('attempting to update artist Instagram data')
+      let newInstagramEntry = await instagram.function(artist.instagramHandle)
       instagramData = [newInstagramEntry]
       try {
         if (artist.instagramData[artist.instagramData.length-1]) {
           let latestData = artist.instagramData[artist.instagramData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          console.log(username, newInstagramEntry.username, Date.now(), date)
-          if (username === newInstagramEntry.username && Date.now() < date + 3600) instagramData = artist.instagramData
-          if (username === newInstagramEntry.username && Date.now() >= date + 3600) instagramData = [...artist.instagramData, newInstagramEntry]
+          if (username === newInstagramEntry.username && Date.now() < date + 3600000) {
+            artist.instagramData.pop()
+            instagramData = [...artist.instagramData, newInstagramEntry]
+          }
+          if (username === newInstagramEntry.username && Date.now() >= date + 3600000) instagramData = [...artist.instagramData, newInstagramEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing Instagram Data: ' + artist.instagramData)
+      console.log('New Instagram Data: ' + instagramData)
     }
 
     // SPOTIFY
     //
     if (artist.spotifyHandle) {
+      console.log('attempting to update artist Spotify data')
       let newSpotifyEntry = await spotify.function(artist.spotifyHandle)
       spotifyData = [newSpotifyEntry]
       try {
@@ -146,16 +158,21 @@ updateData = async(artists) => {
           let latestData = artist.spotifyData[artist.spotifyData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          console.log(username, newSpotifyEntry.username, Date.now(), date)
-          if (username === newSpotifyEntry.username && Date.now() < date + 3600) newSpotifyData = artist.spotifyData
-          if (username === newSpotifyEntry.username && Date.now() >= date + 3600) spotifyData = [...artist.spotifyData, newSpotifyEntry]
+          if (username === newSpotifyEntry.username && Date.now() < date + 3600000) {
+            artist.spotifyData.pop()
+            spotifyData = [...artist.spotifyData, newSpotifyEntry]
+          }
+          if (username === newSpotifyEntry.username && Date.now() >= date + 3600000) spotifyData = [...artist.spotifyData, newSpotifyEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing Spotify Data: ' + artist.spotifyData)
+      console.log('New Spotify Data: ' + spotifyData)
     }
 
     // TWITTER
     //
     if (artist.twitterHandle) {
+      console.log('attempting to update artist Twitter data')
       let newTwitterEntry = await twitter.function(artist.twitterHandle)
       twitterData = [newTwitterEntry]
       try {
@@ -163,16 +180,21 @@ updateData = async(artists) => {
           let latestData = artist.twitterData[artist.twitterData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          console.log(username, newTwitterEntry.username, Date.now(), date)
-          if (username === newTwitterEntry.username && Date.now() < date + 3600) newTwitterData = artist.twitterData
-          if (username === newTwitterEntry.username && Date.now() >= date + 3600) twitterData = [...artist.twitterData, newTwitterEntry]
+          if (username === newTwitterEntry.username && Date.now() < date + 3600000) {
+            artist.twitterData.pop()
+            twitterData = [...artist.twitterData, newTwitterEntry]
+          }
+          if (username === newTwitterEntry.username && Date.now() >= date + 3600000) twitterData = [...artist.twitterData, newTwitterEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing Twitter Data: ' + artist.twitterData)
+      console.log('New Twitter Data: ' + twitterData)
     }
 
     // FACEBOOK
     //
     if (artist.facebookHandle) {
+      console.log('attempting to update artist Facebook data')
       let newFacebookEntry = await facebook.function(artist.facebookHandle)
       facebookData = [newFacebookEntry]
       try {
@@ -180,11 +202,15 @@ updateData = async(artists) => {
           let latestData = artist.facebookData[artist.facebookData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          console.log(username, newFacebookEntry.username, Date.now(), date)
-          if (username === newFacebookEntry.username && Date.now() < date + 3600) newFacebookData = artist.facebookData
-          if (username === newFacebookEntry.username && Date.now() >= date + 3600) facebookData = [...artist.facebookData, newFacebookEntry]
+          if (username === newFacebookEntry.username && Date.now() < date + 3600000) {
+            artist.facebookData.pop()
+            facebookData = [...artist.facebookData, newFacebookEntry]
+          }
+          if (username === newFacebookEntry.username && Date.now() >= date + 3600000) facebookData = [...artist.facebookData, newFacebookEntry]
         }
       } catch(error) { console.log(error) }
+      console.log('Existing Facebook Data: ' + artist.facebookData)
+      console.log('New Facebook Data: ' + facebookData)
     }
 
     console.log(await youtubeData, await soundcloudData, await instagramData, await spotifyData, await twitterData, await facebookData, artistID)

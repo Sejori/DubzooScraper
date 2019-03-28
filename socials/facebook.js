@@ -20,7 +20,7 @@ module.exports = {
     let name = socialHTML.substring(nameStartIndex, nameEndIndex)
     let likeCount = socialHTML.substring(likesStartIndex, likesEndIndex)
 
-    let report = { username: name, like_count: likeCount }
+    let report = { username: name, like_count: likeCount, date_requested: Date.now() }
 
     return report
   }

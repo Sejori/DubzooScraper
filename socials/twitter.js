@@ -36,7 +36,8 @@ module.exports = {
       tweet_count: tweetCount,
       followers: followingCount,
       following: followerCount,
-      like_count: likeCount
+      like_count: likeCount,
+      date_requested: Date.now()
     }
 
     return report
