@@ -1,10 +1,8 @@
-// Do not commit!
-module.exports = {
-  STRAPI_URI: "http://localhost:1337",
-  STRAPI_USERNAME: "ScraperUser",
-  STRAPI_PASSWORD: "1q2w3e4r5t6y7u8i9o0p-[=]",
-  YOUTUBE_API_KEY: "AIzaSyCaP5sa-mc5m0IHIXMSltkZpEkzdGZX7vE",
-  SOUNDCLOUD_CLIENT_ID: "22c93b81ed33242900cb6071634df845",
-  SPOTIFY_CLIENT_ID: "c0606c481d584d7d829105050a2b9cbf",
-  SPOTIFY_CLIENT_SECRET: "47cb901fac314a0589c76d57ab3bc0a2"
+// Keys.js - figure out what set of credentials to return
+if (process.env.NODE_ENV === 'production') {
+  // in prod - return prod credential
+  module.exports = require('./prod');
+} else {
+  // in dev - return dev credentials
+  module.exports = require('./dev');
 }

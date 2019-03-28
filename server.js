@@ -17,7 +17,7 @@ const app = express()
 const schedule = require('node-schedule')
 
 //                          CRON SCHEDULING
-var j = schedule.scheduleJob('*/10 * * * *', function(){
+var j = schedule.scheduleJob('0 1 * * *', function(){
 
   getData()
   console.log('It was 1am. The database handles were fetched, and new data has been added! :)')
@@ -92,11 +92,11 @@ updateData = async(artists) => {
           let latestData = artist.youtubeData[artist.youtubeData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newYoutubeEntry.username && Date.now() < date + 3600000) {
+          if (username === newYoutubeEntry.username && Date.now() < date + 3600000 * 24) {
             artist.youtubeData.pop()
             youtubeData = [...artist.youtubeData, newYoutubeEntry]
           }
-          if (username === newYoutubeEntry.username && Date.now() >= date + 3600000) youtubeData = [...artist.youtubeData, newYoutubeEntry]
+          if (username === newYoutubeEntry.username && Date.now() >= date + 3600000 * 24) youtubeData = [...artist.youtubeData, newYoutubeEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing YouTube Data: ' + artist.youtubeData)
@@ -114,11 +114,11 @@ updateData = async(artists) => {
           let latestData = artist.soundcloudData[artist.soundcloudData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newSoundcloudEntry.username && Date.now() < date + 3600000) {
+          if (username === newSoundcloudEntry.username && Date.now() < date + 3600000 * 24) {
             artist.soundcloudData.pop()
             soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
           }
-          if (username === newSoundcloudEntry.username && Date.now() >= date + 3600000) soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
+          if (username === newSoundcloudEntry.username && Date.now() >= date + 3600000 * 24) soundcloudData = [...artist.soundcloudData, newSoundcloudEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing Soundcloud Data: ' + artist.soundcloudData)
@@ -136,11 +136,11 @@ updateData = async(artists) => {
           let latestData = artist.instagramData[artist.instagramData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newInstagramEntry.username && Date.now() < date + 3600000) {
+          if (username === newInstagramEntry.username && Date.now() < date + 3600000 * 24) {
             artist.instagramData.pop()
             instagramData = [...artist.instagramData, newInstagramEntry]
           }
-          if (username === newInstagramEntry.username && Date.now() >= date + 3600000) instagramData = [...artist.instagramData, newInstagramEntry]
+          if (username === newInstagramEntry.username && Date.now() >= date + 3600000 * 24) instagramData = [...artist.instagramData, newInstagramEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing Instagram Data: ' + artist.instagramData)
@@ -158,11 +158,11 @@ updateData = async(artists) => {
           let latestData = artist.spotifyData[artist.spotifyData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newSpotifyEntry.username && Date.now() < date + 3600000) {
+          if (username === newSpotifyEntry.username && Date.now() < date + 3600000 * 24) {
             artist.spotifyData.pop()
             spotifyData = [...artist.spotifyData, newSpotifyEntry]
           }
-          if (username === newSpotifyEntry.username && Date.now() >= date + 3600000) spotifyData = [...artist.spotifyData, newSpotifyEntry]
+          if (username === newSpotifyEntry.username && Date.now() >= date + 3600000 * 24) spotifyData = [...artist.spotifyData, newSpotifyEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing Spotify Data: ' + artist.spotifyData)
@@ -180,11 +180,11 @@ updateData = async(artists) => {
           let latestData = artist.twitterData[artist.twitterData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newTwitterEntry.username && Date.now() < date + 3600000) {
+          if (username === newTwitterEntry.username && Date.now() < date + 3600000 * 24) {
             artist.twitterData.pop()
             twitterData = [...artist.twitterData, newTwitterEntry]
           }
-          if (username === newTwitterEntry.username && Date.now() >= date + 3600000) twitterData = [...artist.twitterData, newTwitterEntry]
+          if (username === newTwitterEntry.username && Date.now() >= date + 3600000 * 24) twitterData = [...artist.twitterData, newTwitterEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing Twitter Data: ' + artist.twitterData)
@@ -202,11 +202,11 @@ updateData = async(artists) => {
           let latestData = artist.facebookData[artist.facebookData.length-1]
           let username = latestData.username
           let date = latestData.date_requested
-          if (username === newFacebookEntry.username && Date.now() < date + 3600000) {
+          if (username === newFacebookEntry.username && Date.now() < date + 3600000 * 24) {
             artist.facebookData.pop()
             facebookData = [...artist.facebookData, newFacebookEntry]
           }
-          if (username === newFacebookEntry.username && Date.now() >= date + 3600000) facebookData = [...artist.facebookData, newFacebookEntry]
+          if (username === newFacebookEntry.username && Date.now() >= date + 3600000 * 24) facebookData = [...artist.facebookData, newFacebookEntry]
         }
       } catch(error) { console.log(error) }
       console.log('Existing Facebook Data: ' + artist.facebookData)
