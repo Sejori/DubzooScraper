@@ -34,8 +34,8 @@ module.exports = {
     let report = {
       username: name,
       tweet_count: tweetCount,
-      followers: followingCount,
-      following: followerCount,
+      following: followingCount,
+      followers: followerCount,
       like_count: likeCount,
       date_requested: Date.now()
     }
