@@ -43,18 +43,18 @@ module.exports = {
             followerEstimate = Number(trimmedFollowers) * 1000000
             // search instagram html as string then search for numbers in string
             let numbers = body.match(/\d+/g).map(Number)
-            let filtered = numbers.filter(el => {
-              return (el > followerEstimate - 50000 && el < followerEstimate + 50000)
+            var closest = numbers.reduce(function(prev, curr) {
+              return (Math.abs(curr - followerEstimate) < Math.abs(prev - followerEstimate) ? curr : prev);
             })
-            report.followers = filtered[0]
+            report.followers = closest
           } else {
             followerEstimate = Number(trimmedFollowers) * 1000
             // search instagram html as string then search for numbers in string
             let numbers = body.match(/\d+/g).map(Number)
-            let filtered = numbers.filter(el => {
-              return (el > followerEstimate - 50 && el < followerEstimate + 50)
+            var closest = numbers.reduce(function(prev, curr) {
+              return (Math.abs(curr - followerEstimate) < Math.abs(prev - followerEstimate) ? curr : prev);
             })
-            report.followers = filtered[0]
+            report.followers = closest
           }
         }
 
