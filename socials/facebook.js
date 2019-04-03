@@ -12,15 +12,16 @@ module.exports = {
     })
     const socialHTML = await socialResponse.text();
 
-    let nameStartIndex = socialHTML.search('<a class="_5u7u" href="/') + 24
-    let nameEndIndex = socialHTML.search('/about/" id="u_0_n">');
-    let likesStartIndex = socialHTML.search('<div class="_4bl9"><div>') + 24
-    let likesEndIndex = socialHTML.search(' people like this')
+    let metaStartIndex = socialHTML.search('<meta name="description" content="') + 34
+    let metaEndIndex = metaStartIndex + 200
+    let metaDesciption = socialHTML.substring(metaStartIndex, metaEndIndex)
+    let metaWords = metaDesciption.split(" ")
+    let name = metaWords[0]
+    if (name[name.length-1] !== ",") name = metaWords[0] + ' ' + metaWords[1]
+    name = name.substring(0, name.length-1)
+    let likes = metaWords[metaWords.findIndex(function(element, index, array){return element==="likes"})-1]
 
-    let name = socialHTML.substring(nameStartIndex, nameEndIndex)
-    let likeCount = socialHTML.substring(likesStartIndex, likesEndIndex)
-
-    let report = { username: name, like_count: Number(likeCount), date_requested: Date.now() }
+    let report = { username: name, like_count: Number(likes), date_requested: Date.now() }
 
     return report
   }

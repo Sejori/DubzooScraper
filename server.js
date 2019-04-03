@@ -26,6 +26,7 @@ var j = schedule.scheduleJob('0 1 * * *', function(){
 
 getData = async(artistID) => {
   console.log('getData called')
+  console.log(keys)
   // login to strapi as ScraperUser for administrative permissions
   const loginResponse = await axios.post(keys.STRAPI_URI + '/auth/local', {
       identifier: keys.STRAPI_USERNAME,
@@ -91,12 +92,15 @@ updateData = async(artists) => {
         if (artist.youtubeData[artist.youtubeData.length-1]) {
           let latestData = artist.youtubeData[artist.youtubeData.length-1]
           let username = latestData.username
-          let date = latestData.date_requested
-          if (username === newYoutubeEntry.username && Date.now() < date + 3600000 * 24) {
+          let date = new Date(latestData.date_requested)
+          existing_data_date = date.getDay() + '-' + date.getMonth()+1 + '-' + date.getFullYear()
+          let now = new Date()
+          new_data_date = now.getDay() + '-' + now.getMonth()+1 + '-' + now.getFullYear()
+          if (username === newYoutubeEntry.username && existing_data_date === new_data_date) {
             artist.youtubeData.pop()
-            youtubeData = [...artist.youtubeData, newYoutubeEntry]
+            youtubeData = artist.youtubeData.push(newYoutubeEntry)
           }
-          if (username === newYoutubeEntry.username && Date.now() >= date + 3600000 * 24) youtubeData = [...artist.youtubeData, newYoutubeEntry]
+          if (username === newYoutubeEntry.username && existing_data_date !== new_data_date) youtubeData = artist.youtubeData.push(newYoutubeEntry)
         }
       } catch(error) { console.log(error) }
       console.log('Existing YouTube Data: ' + artist.youtubeData)
