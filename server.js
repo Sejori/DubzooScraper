@@ -26,7 +26,6 @@ var j = schedule.scheduleJob('0 1 * * *', function(){
 
 getData = async(artistID) => {
   console.log('getData called')
-  console.log(keys)
   // login to strapi as ScraperUser for administrative permissions
   const loginResponse = await axios.post(keys.STRAPI_URI + '/auth/local', {
       identifier: keys.STRAPI_USERNAME,
