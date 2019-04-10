@@ -216,7 +216,7 @@ updateData = async(artists) => {
       console.log('New Facebook Data: ' + facebookData)
     }
 
-    console.log(await youtubeData, await soundcloudData, await instagramData, await spotifyData, await twitterData, await facebookData, artistID)
+    // console.log(await youtubeData, await soundcloudData, await instagramData, await spotifyData, await twitterData, await facebookData, artistID)
 
     // call function to update database
     sendData(await youtubeData, await soundcloudData, await instagramData, await spotifyData, await twitterData, await facebookData, artistID)

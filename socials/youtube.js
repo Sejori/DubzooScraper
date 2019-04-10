@@ -1,4 +1,4 @@
-// Instagram scraper tool
+// Youtube Data API tool
 const fetch = require('node-fetch')
 const keys = require('../config/keys.js')
 

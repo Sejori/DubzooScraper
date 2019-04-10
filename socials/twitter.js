@@ -13,28 +13,23 @@ module.exports = {
     const socialHTML = await socialResponse.text();
 
     // find index positions of tags surrounding data. NOTE: data order = tweets, following, followers, likes
-    let nameStartIndex = socialHTML.search('hreflang="fr" href="https://twitter.com/') + 40;
+    let nameStartIndex = socialHTML.search('hreflang="fr" href="https://twitter.com/') + 40
     let nameEndIndex = socialHTML.search('lang=fr">') - 1;
-    let tweetsStartIndex = socialHTML.search('<span class="u-hiddenVisually">Tweets, current page.</span>') + 115;
-    let followingStartIndex = socialHTML.search('<span class="u-hiddenVisually">Following</span>') + 100;
-    let followersStartIndex = socialHTML.search('<span class="u-hiddenVisually">Followers</span>') + 100;
-    let likesStartIndex = socialHTML.search('<span class="u-hiddenVisually">Likes</span>') + 96;
-    let re = / data-is-compact=/g;
-    let dataEndIndices = [];
-    let match = null;
-    while (( match = re.exec(socialHTML)) != null) {
-      dataEndIndices.push(match.index)
-    }
-
     let name = socialHTML.substring(nameStartIndex, nameEndIndex)
-    let tweetCount = socialHTML.substring(tweetsStartIndex, dataEndIndices[0])
-    let followingCount = socialHTML.substring(followingStartIndex, dataEndIndices[1])
-    let followerCount = socialHTML.substring(followersStartIndex, dataEndIndices[2])
-    let likeCount = socialHTML.substring(likesStartIndex, dataEndIndices[3])
+
+    let tweetsStartIndex = socialHTML.search('statuses_count&quot;:') + 21
+    let tweetsEndIndex = socialHTML.search(',&quot;lang&quot;')
+    let followersStartIndex = socialHTML.search('followers_count&quot;:') + 22
+    let followersEndIndex = socialHTML.search(',&quot;friends_count&quot;')
+    let likesStartIndex = socialHTML.search('favourites_count&quot;:') + 23
+    let likesEndIndex = socialHTML.search(',&quot;utc_offset&quot;')
+
+    let tweetCount = socialHTML.substring(tweetsStartIndex, tweetsEndIndex)
+    let followerCount = socialHTML.substring(followersStartIndex, followersEndIndex)
+    let likeCount = socialHTML.substring(likesStartIndex, likesEndIndex)
     let report = {
       username: name,
       tweet_count: tweetCount,
-      following: followingCount,
       followers: followerCount,
       like_count: likeCount,
       date_requested: Date.now()
