@@ -5,6 +5,7 @@ const instagram = require("./socials/instagram.js")
 const spotify = require("./socials/spotify.js")
 const twitter = require("./socials/twitter.js")
 const facebook = require("./socials/facebook.js")
+const instafans = require("./socials/instafans.js")
 const keys = require('./config/keys.js')
 var artists
 var jwt
@@ -250,6 +251,13 @@ sendData = (youtubeData, soundcloudData, instagramData, spotifyData, twitterData
 
 //                               ROUTES
 
+// allow CORS for everything
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', async function (req, res) {
   res.send('Hello you cheeky monkey! <br/> <br/> This is the Dubzoo scraper. Try /youtube, /instagram, /spotify or /soundcloud followed by ?handle=[insert username here] :D')
@@ -297,6 +305,12 @@ app.get('/facebook', async function (req, res) {
   let handle = req.query.handle
   let report = await facebook.function(handle)
   res.send(report)
+})
+
+app.get('/instafans', async function (req, res) {
+  let handle = req.query.handle
+  let responses = await instafans.function(handle)
+  res.send(responses)
 })
 
 app.listen(process.env.PORT || 8000 , () => console.log(`Example app listening on port 8000!`))
