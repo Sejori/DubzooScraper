@@ -9,7 +9,7 @@ module.exports = {
       // start puppeteer headless browser
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
-      await page.setViewport({width: 800, height: 600, deviceScaleFactor: 2})
+      await page.setViewport({ width: 800, height: 600, deviceScaleFactor: 2 })
 
       // tell browser to store requests
       page.on('request', async (request) => {
