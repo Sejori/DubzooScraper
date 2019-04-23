@@ -5,7 +5,7 @@ const instagram = require("./socials/instagram.js")
 const spotify = require("./socials/spotify.js")
 const twitter = require("./socials/twitter.js")
 const facebook = require("./socials/facebook.js")
-const instafans = require("./socials/instafans.js")
+// const instafans = require("./socials/instafans.js")
 const keys = require('./config/keys.js')
 var artists
 var jwt
@@ -307,10 +307,10 @@ app.get('/facebook', async function (req, res) {
   res.send(report)
 })
 
-app.get('/instafans', async function (req, res) {
-  let handle = req.query.handle
-  let responses = await instafans.function(handle)
-  res.send(responses)
-})
+// app.get('/instafans', async function (req, res) {
+//   let handle = req.query.handle
+//   let responses = await instafans.function(handle)
+//   res.send(responses)
+// })
 
 app.listen(process.env.PORT || 8000 , () => console.log(`Example app listening on port 8000!`))
